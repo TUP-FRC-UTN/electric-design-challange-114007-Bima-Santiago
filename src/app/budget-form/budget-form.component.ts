@@ -56,8 +56,8 @@ export class BudgetFormComponent implements OnDestroy, OnInit{
     this.modulos.removeAt(index)
   }
 
-  // private readonly modulesService = inject(ModuleTypesService)
-  // private readonly budgetsService = inject(BudgetsService)
+  private readonly modulesService = inject(ModuleTypesService)
+  private readonly budgetsService = inject(BudgetsService)
   private subscription = new Subscription()
   private readonly router = inject(Router)
 
@@ -68,11 +68,11 @@ export class BudgetFormComponent implements OnDestroy, OnInit{
       this.budget = this.form.value as Budget
 
       this.subscription.add(
-        // this.budgetsService.post(this.budget).subscribe({
-        //   next: (data) => alert("Budget creado"),
-        //   error: (err) => alert("Error al crear el budget"),
-        //   complete: () => this.router.navigate(['list'])
-        // })
+        this.budgetsService.post(this.budget).subscribe({
+          next: (data) => alert("Budget creado"),
+          error: (err) => alert("Error al crear el budget"),
+          complete: () => this.router.navigate(['list'])
+        })
       )
     }
   }
@@ -85,9 +85,9 @@ export class BudgetFormComponent implements OnDestroy, OnInit{
 
   ngOnInit(): void {
     this.zones = Object.values(Zone)
-    // this.modulesService.get().subscribe(data => {
-    //   this.modulesTypes = data;
-    // })
+    this.modulesService.get().subscribe(data => {
+      this.modulesTypes = data;
+    })
   }
 
 }
