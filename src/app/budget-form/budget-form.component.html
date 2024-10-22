@@ -2,3 +2,68 @@
 https://getbootstrap.com/docs/5.3/forms/form-control/#example
 https://getbootstrap.com/docs/5.3/forms/select/#default
 https://getbootstrap.com/docs/5.3/forms/select/#default -->
+<form [formGroup]="form" (ngSubmit)="sendForm()">
+  <div class="col-md-4">
+    <label class="form-label">Cliente:</label>
+    <input [ngClass]="{'is-invalid':form.controls['cliente'].invalid && form.controls['cliente'].touched }" formControlName="cliente" type="text" class="form-control">
+    @if(form.controls['cliente'].invalid && form.controls['cliente'].touched){
+      @if(form.controls['cliente'].errors?.['required']){
+      <div class="text-danger">Nombre obligatorio</div>
+      }
+    }
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Fecha:</label>
+    <input type="date" name="fecha" formControlName="fecha" [ngClass]="{'is-invalid':form.controls['fecha'].invalid && form.controls['fecha'].touched }">
+    @if(form.controls['fecha'].invalid && form.controls['fecha'].touched){
+      @if(form.controls['fecha'].errors?.['required']){
+      <div class="text-danger">Fecha obligatoria</div>
+      }
+      @if(form.controls['fecha'].errors?.['errorFecha']){
+        <div class="text-danger">La fecha no puede ser posterior a la actual</div>
+      }
+    }
+  </div>
+
+  <div formArrayName="modulos">
+    <button (click)="agregarModulo()" type="button">Agregar</button>
+    @for(modulo of modulos.controls; track $index){
+      <div [formGroupName]="$index">
+          <div class="col-md-4">
+              <label class="form-label">zona:</label>
+              <select name="zona" formControlName="zona">
+                <option value="">Seleccionar zona ...</option>
+                @for (zona of zones; track $index) {
+                  <option [value]="zona">{{zona}}</option>
+                }
+              </select>
+          </div>
+
+          <div formGroupName="modulo" class="row container mt-2">
+            <div class="col-md-4">
+                <label class="form-label">Nombre:</label>
+                <select name="nombre" formControlName="nombre">
+                  <option value="">Seleccionar modulo</option>
+                  @for (modulo of modulesTypes; track $index) {
+                    <option value="modulo.name">{{modulo.name}}</option>
+                  }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Precio</label>
+                <input type="text" formControlName="precio" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Lugares</label>
+              <input type="text" formControlName="lugares" class="form-control">
+          </div>
+          </div>
+      </div>
+    }
+  </div>
+
+  <div>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Enviar</button>
+  </div>
+</form>
