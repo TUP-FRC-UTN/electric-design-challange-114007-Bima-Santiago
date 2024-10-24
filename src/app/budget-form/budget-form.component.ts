@@ -58,6 +58,7 @@ export class BudgetFormComponent implements OnDestroy, OnInit{
 
   private readonly modulesService = inject(ModuleTypesService)
   private readonly budgetsService = inject(BudgetsService)
+  
   private subscription = new Subscription()
   private readonly router = inject(Router)
 
