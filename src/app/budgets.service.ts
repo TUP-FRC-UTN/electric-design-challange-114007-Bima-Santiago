@@ -7,7 +7,7 @@ import { Budget } from './models/budget';
   providedIn: 'root'
 })
 export class BudgetsService {
-  private readonly http = inject(HttpClient)
+  private http = inject(HttpClient)
 
   private apiUrl = "http://localhost:3000/budgets"
 
@@ -15,7 +15,7 @@ export class BudgetsService {
     return this.http.get<Budget[]>(this.apiUrl)
   }
 
-  getById(id:number): Observable<Budget> {
+  getById(id:string): Observable<Budget> {
     return this.http.get<Budget>(`${this.apiUrl}/${id}`)
   }
 

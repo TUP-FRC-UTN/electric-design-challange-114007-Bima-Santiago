@@ -11,6 +11,6 @@ export const routes: Routes = [
     path: 'list', component: BudgetListComponent
   },
   {
-    path: 'view', component: BudgetViewComponent
+    path: 'view/:id', component: BudgetViewComponent
   }
 ];

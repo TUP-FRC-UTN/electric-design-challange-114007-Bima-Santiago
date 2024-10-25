@@ -1,71 +1,88 @@
-<!-- <!-- BUILT IT FROM:
-https://getbootstrap.com/docs/5.3/forms/form-control/#example
-https://getbootstrap.com/docs/5.3/forms/select/#default
-https://getbootstrap.com/docs/5.3/forms/select/#default -->
-<form [formGroup]="form" (ngSubmit)="sendForm()">
-  <div class="col-md-4">
-    <label class="form-label">Cliente:</label>
-    <input [ngClass]="{'is-invalid':form.controls['cliente'].invalid && form.controls['cliente'].touched }" formControlName="cliente" type="text" class="form-control">
-    @if(form.controls['cliente'].invalid && form.controls['cliente'].touched){
-      @if(form.controls['cliente'].errors?.['required']){
-      <div class="text-danger">Nombre obligatorio</div>
+<div class="container mt-4">
+  <form [formGroup]="form" (ngSubmit)="sendForm()">
+    <div class="col-md-4">
+      <label class="form-label">Cliente:</label>
+      <input [ngClass]="{'is-invalid':form.controls['client'].invalid && form.controls['client'].touched }" formControlName="client" type="text" class="form-control">
+      @if(form.controls['client'].invalid && form.controls['client'].touched){
+        @if(form.controls['client'].errors?.['required']){
+          <div class="text-danger mt-2">Nombre obligatorio</div>
+        }
       }
-    }
-  </div>
+    </div>
 
-  <div class="col-md-4">
-    <label class="form-label">Fecha:</label>
-    <input type="date" name="fecha" formControlName="fecha" [ngClass]="{'is-invalid':form.controls['fecha'].invalid && form.controls['fecha'].touched }">
-    @if(form.controls['fecha'].invalid && form.controls['fecha'].touched){
-      @if(form.controls['fecha'].errors?.['required']){
-      <div class="text-danger">Fecha obligatoria</div>
+    <div class="col-md-4">
+      <label class="form-label">Fecha:</label>
+      <input type="date" name="date" formControlName="date" [ngClass]="{'is-invalid':form.controls['date'].invalid && form.controls['date'].touched }">
+      @if(form.controls['date'].invalid && form.controls['date'].touched){
+        @if(form.controls['date'].errors?.['required']){
+          <div class="text-danger">Fecha obligatoria</div>
+        }
+        @if(form.controls['date'].errors?.['errorFecha']){
+          <div class="text-danger">La fecha no puede ser posterior a la actual</div>
+        }
       }
-      @if(form.controls['fecha'].errors?.['errorFecha']){
-        <div class="text-danger">La fecha no puede ser posterior a la actual</div>
-      }
-    }
-  </div>
+    </div>
 
-  <div formArrayName="modulos">
-    <button (click)="agregarModulo()" type="button">Agregar</button>
-    @for(modulo of modulos.controls; track $index){
-      <div [formGroupName]="$index">
-          <div class="col-md-4">
-              <label class="form-label">zona:</label>
-              <select name="zona" formControlName="zona">
-                <option value="">Seleccionar zona ...</option>
-                @for (zona of zones; track $index) {
-                  <option [value]="zona">{{zona}}</option>
-                }
-              </select>
-          </div>
+    <div formArrayName="modules">
+      <button (click)="agregarModulo()" type="button">Agregar</button>
 
-          <div formGroupName="modulo" class="row container mt-2">
+      @for(modulo of modules.controls; track $index){
+        <div [formGroupName]="$index">
+
+            <button (click)="quitarModulo($index)" type="button">Quitar</button>
+
             <div class="col-md-4">
-                <label class="form-label">Nombre:</label>
-                <select name="nombre" formControlName="nombre">
-                  <option value="">Seleccionar modulo</option>
-                  @for (modulo of modulesTypes; track $index) {
-                    <option value="modulo.name">{{modulo.name}}</option>
+                <label class="form-label">zona:</label>
+                <select name="zone" formControlName="zone">
+                  <option value="" disabled selected>Seleccionar zona ...</option>
+                  @for (zona of zones; track $index) {
+                    <option [value]="zona">{{zona}}</option>
                   }
                 </select>
+                @if(modulo.get('zone')?.hasError('required') && modulo.get('zone')?.touched) {
+                  <div class="text-danger">La zona es requerida.</div>
+                }
+                @if(validateSlots($index)){
+                  <div class="text-danger">La caja de esta zona no puede ocupar mas de 3 slots en total</div>
+                }
             </div>
+
             <div class="col-md-4">
-                <label class="form-label">Precio</label>
-                <input type="text" formControlName="precio" class="form-control">
+                <label class="form-label">Nombre:</label>
+                <select name="nombre" formControlName="module">
+                  <option value="" disabled selected>Seleccionar modulo</option>
+                  @for (modulo of modulesTypes; track $index) {
+                    <option [value]="modulo.id">{{modulo.name}}</option>
+                  }
+                </select>
+                @if(modulo.get('modulo')?.hasError('required') && modulo.get('modulo')?.touched) {
+                  <div class="text-danger">El tipo de módulo es requerido.</div>
+                }
             </div>
-            <div class="col-md-4">
-              <label class="form-label">Lugares</label>
-              <input type="text" formControlName="lugares" class="form-control">
-          </div>
-          </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Precio</label>
+              <input type="text" [value]="getModulePrice($index) | currency" readonly
+                  class="form-control bg-light">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Slots</label>
+                <input type="text" [value]="getModuleSlots($index)" readonly class="form-control bg-light">
+            </div>
+        </div>
+      }
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+      <div>
+          <button type="button" routerLink="/" class="btn btn-secondary me-2">
+              Volver
+          </button>
+          <button type="submit" [disabled]="!form.valid" class="btn btn-primary">
+              Guardar
+          </button>
       </div>
-    }
   </div>
-
-  <div>
-    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Enviar</button>
-  </div>
-</form>
-
-aaaaaa
+  </form>
+</div>

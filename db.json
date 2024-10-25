@@ -1,5 +1,17 @@
 {
-  "budgets": [],
+  "budgets": [
+    {
+      "id": "da10",
+      "client": "cliente1",
+      "date": "2024-10-24",
+      "modules": [
+        {
+          "zone": "Comedor",
+          "module": "3"
+        }
+      ]
+    }
+  ],
   "module-types": [
     {
       "id": "1",
