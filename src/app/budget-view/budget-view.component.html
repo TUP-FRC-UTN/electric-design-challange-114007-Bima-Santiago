@@ -1,1 +1,10 @@
-<!-- BUILD IT FROM HERE https://getbootstrap.com/docs/5.3/components/card/#sizing -->
+<div>
+  <h1>Presupuesto #{{budget.id}}</h1>
+  <p>Cajas necesarias: {{budget.modules.length}}</p>
+  @for (module of modules; track $index) {
+    <h3>{{module.zone}}</h3>
+    @for(item of module.modules; track $index) {
+      <p>{{item.name}} ({{item.slots}}) - {{item.price | currency}}</p>
+    }
+  }
+</div>
